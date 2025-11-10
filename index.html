@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vui Thể Thao</title>
+    
+    <style>
+        /* === CÀI ĐẶT CHUNG === */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            color: #333;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff; color: white; border: none;
+            padding: 10px 15px; font-size: 14px; border-radius: 5px;
+            cursor: pointer; margin-top: 10px; transition: background-color 0.2s;
+            font-weight: 600;
+        }
+        button:hover { background-color: #0056b3; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* === 1. KHU VỰC AUTH (ĐĂNG NHẬP/ĐĂNG KÝ) === */
+        #auth-container {
+            display: flex;
+            gap: 2rem;
+            max-width: 900px;
+            margin: 50px auto;
+        }
+        .form-card {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px; border: 1px solid #ddd;
+            border-radius: 5px; box-sizing: border-box; font-family: inherit;
+        }
+        button.register-btn { background-color: #42b72a; }
+        button.register-btn:hover { background-color: #36a420; }
+        
+        /* === 2. KHU VỰC APP (SAU KHI ĐĂNG NHẬP) === */
+        #app-container {
+            display: none; /* Ẩn ban đầu */
+        }
+        
+        /* === 2.1. Top Nav (Thanh xanh trên cùng) === */
+        .top-nav {
+            background-color: #4267B2; /* Màu xanh Facebook/VuiTheThao */
+            color: white;
+            padding: 0 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            height: 56px;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 20px;
+        }
+        .nav-links {
+            flex-grow: 1;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #welcomeMessage {
+            font-weight: 600;
+        }
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0;
+        }
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* === 2.2. Hero Header (Ảnh nền và Tìm kiếm) === */
+        .hero-header {
+            /* Bạn có thể thay ảnh này */
+            background-image: linear-gradient(rgba(59, 89, 152, 0.85), rgba(59, 89, 152, 0.85)), url('https://images.unsplash.com/photo-1542567431-031e403659e7?q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 50px 20px;
+            color: white;
+            text-align: center;
+        }
+        .hero-header h1 {
+            font-size: 2.2rem;
+            margin: 0 0 30px 0;
+        }
+        /* Style cho Form Tìm Sân của Player */
+        #playerSearchForm {
+            display: flex;
+            flex-wrap: wrap; /* Cho phép xuống hàng trên mobile */
+            justify-content: center;
+            gap: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        #playerSearchForm .form-group {
+            flex: 1;
+            min-width: 150px;
+            margin-bottom: 0;
+        }
+        #playerSearchForm label {
+            display: none; /* Ẩn label */
+        }
+        #playerSearchForm input, #playerSearchForm select {
+            border: none;
+            border-radius: 5px;
+            padding: 12px;
+            width: 100%;
+        }
+        #playerSearchForm button {
+            background-color: #18A4E0; /* Màu xanh cyan */
+            padding: 12px 20px;
+            flex-shrink: 0;
+            margin: 0;
+        }
+        #playerSearchForm button:hover {
+            background-color: #1593c9;
+        }
+
+        /* === 2.3. Sub Nav (Thanh filter) === */
+        .sub-nav {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        .sub-nav .container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .sub-nav span {
+            font-weight: 600;
+        }
+        .filter-pills a {
+            text-decoration: none;
+            color: #333;
+            background-color: #e4e6eb;
+            padding: 8px 12px;
+            border-radius: 20px; /* Pills */
+            margin: 0 5px;
+            font-size: 14px;
+        }
+        .filter-pills a.active {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        /* === 2.4. Main Container (Tabs) === */
+        .main-container {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+        .tab-nav {
+            display: flex;
+            background-color: #fff;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #ddd;
+            padding: 0 10px;
+        }
+        .tab-button {
+            padding: 15px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 3px solid transparent;
+            margin: 0;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #007bff;
+            color: #007bff;
+        }
+        .tab-content {
+            display: none;
+            background: #fff;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        
+        /* === 2.5. Style cho Kết quả Tìm Sân (Giống card) === */
+        .search-results {
+            margin-top: 1.5rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .court-result-item {
+            display: flex;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            gap: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+        }
+        .court-result-item .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e4e6eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #888;
+            flex-shrink: 0;
+        }
+        .court-result-item .info {
+            flex-grow: 1;
+        }
+        .court-result-item .info h4 {
+            margin: 0 0 5px 0;
+            color: #4267B2; /* Blue name */
+        }
+        .court-result-item .info .sport-tags {
+            font-size: 12px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .court-result-item .info .bio {
+            font-size: 14px;
+            color: #333;
+        }
+        .court-result-item .location {
+            flex-shrink: 0;
+            width: 150px;
+            text-align: right;
+            font-size: 14px;
+            color: #555;
+        }
+        button.book-btn {
+            background-color: #42b72a;
+            width: 100%;
+        }
+        button.book-btn:hover { background-color: #36a420; }
+        
+        /* === Thông báo === */
+        #messageArea {
+            display: none; position: fixed; bottom: 20px; right: 20px;
+            max-width: 400px; z-index: 1000; padding: 1rem; border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #messageArea.success { background-color: #d4edda; color: #155724; display: block; }
+        #messageArea.error { background-color: #f8d7da; color: #721c24; display: block; }
+
+    </style>
+</head>
+<body>
+
+    <div id="auth-container">
+        <div class="form-card">
+            <h2>Đăng Nhập</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit">Đăng Nhập</button>
+            </form>
+        </div>
+        <div class="form-card">
+            <h2>Đăng Ký</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">Tên hiển thị</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Mật khẩu</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regRole">Vai trò</label>
+                    <select id="regRole">
+                        <option value="player">Người chơi (Player)</option>
+                        <option value="owner">Chủ sân (Owner)</option>
+                    </select>
+                </div>
+                <button type="submit" class="register-btn">Tạo Tài Khoản</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-container">
+        
+        <nav class="top-nav">
+            <div class="nav-content">
+                <div class="logo">VUI THỂ THAO</div>
+                <div class="nav-links">
+                    <a href="#" class="active">Tìm bạn</a>
+                    <a href="#">Bản đồ</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="nav-user">
+                    <span id="welcomeMessage"></span>
+                    <button id="logoutButton" class="logout-btn">Đăng xuất</button>
+                </div>
+            </div>
+        </nav>
+        
+        <header class="hero-header" id="player-hero">
+            <div class="hero-content">
+                <h1>Tìm Sân Trống Nhanh Chóng</h1>
+                <form id="playerSearchForm">
+                    <div class="form-group">
+                        <label for="searchSport">Môn</label>
+                        <select id="searchSport" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchDate">Ngày</label>
+                        <input type="date" id="searchDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchTime">Giờ</label>
+                        <input type="time" id="searchTime" step="1800" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchDuration">Thời lượng (giờ)</label>
+                        <input type="number" id="searchDuration" value="2" min="1" step="0.5" required>
+                    </div>
+                    <button type="submit">Tìm Sân</button>
+                </form>
+            </div>
+        </header>
+
+        <nav class="sub-nav">
+            <div class="container">
+                <span>Bộ lọc nhanh:</span>
+                <div class="filter-pills">
+                    <a href="#" class="active">Bạn cầu lông</a>
+                    <a href="#">Bạn bóng chuyền</a>
+                    <a href="#">Bạn tennis</a>
+                    <a href="#">Bạn bóng đá</a>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="main-container">
+            <nav class="tab-nav">
+                <button class="tab-button" data-tab="player-content" id="player-tab" style="display: none;">Kết Quả Tìm Sân</button>
+                <button class="tab-button" data-tab="owner-content" id="owner-tab" style="display: none;">Quản lý Sân</button>
+                <button class="tab-button active" data-tab="profile-content">Hồ Sơ Của Tôi</button>
+            </nav>
+            
+            <div id="player-content" class="tab-content">
+                <h3>Kết quả tìm sân trống:</h3>
+                <div id="search-results-list" class="search-results">
+                    <p>Vui lòng tìm kiếm ở thanh trên để xem kết quả.</p>
+                </div>
+            </div>
+            
+            <div id="owner-content" class="tab-content">
+                <h4>1. Tạo Khu Sân Mới</h4>
+                <form id="venueForm">
+                    </form>
+                
+                <div id="courts-section">
+                    <h4>2. Quản Lý Sân</h4>
+                    </div>
+            </div>
+
+            <div id="profile-content" class="tab-content active">
+                <h3>Cập nhật thông tin cá nhân</h3>
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="profileName">Tên hiển thị</label>
+                        <input type="text" id="profileName">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="profileFirstName">Họ và Tên đệm (First Name)</label>
+                            <input type="text" id="profileFirstName">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileLastName">Tên (Last Name)</label>
+                            <input type="text" id="profileLastName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePhone">Số điện thoại</label>
+                        <input type="text" id="profilePhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileBio">Giới thiệu (Bio)</label>
+                        <textarea id="profileBio" rows="3"></textarea>
+                    </div>
+                    <button type="submit" style="width: auto;">Lưu thay đổi</button>
+                </form>
+            </div>
+        </main>
+        
+    </div>
+
+    <div id="messageArea"></div>
+
+    <script>
+        // 🛑 QUAN TRỌNG: SỬA URL NÀY
+        const API_BASE_URL = "https://cnpm-ub8a.onrender.com";
+
+        // === Lấy các phần tử ===
+        const authContainer = document.getElementById("auth-container");
+        const appContainer = document.getElementById("app-container");
+        
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const profileForm = document.getElementById("profileForm");
+        const playerSearchForm = document.getElementById("playerSearchForm"); // Form tìm kiếm MỚI
+        
+        const logoutButton = document.getElementById("logoutButton");
+        const welcomeMessage = document.getElementById("welcomeMessage");
+        const messageArea = document.getElementById("messageArea");
+        
+        // Tab elements
+        const playerTab = document.getElementById("player-tab");
+        const ownerTab = document.getElementById("owner-tab");
+        const profileTab = document.querySelector('.tab-button[data-tab="profile-content"]');
+        
+        // Owner elements
+        // (Lưu ý: Bạn cần copy HTML của Owner tab từ tin nhắn trước vào đây)
+        // const venueForm = ...
+        // const courtForm = ...
+        
+        // Player elements
+        const searchSportSelect = document.getElementById("searchSport");
+        const searchResultsList = document.getElementById("search-results-list");
+
+        let messageTimer;
+        let currentVenueId = null; 
+        
+        // === Hàm Global ===
+        
+        function showMessage(message, isError = false) {
+            clearTimeout(messageTimer);
+            messageArea.textContent = message;
+            messageArea.className = isError ? 'error' : 'success';
+            messageTimer = setTimeout(() => {
+                messageArea.style.display = 'none';
+            }, 4000);
+        }
+        
+        async function callApi(endpoint, method = 'GET', body = null) {
+            const options = { method: method, headers: {} };
+            if (body) {
+                options.headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify(body);
+            }
+            
+            const response = await fetch(API_BASE_URL + endpoint, options);
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || "Lỗi không xác định từ API");
+            }
+            return data;
+        }
+        
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem("currentUser"));
+        }
+
+        // --- Hàm Xử lý Tab ---
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+        
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                tabContents.forEach(content => content.classList.remove("active"));
+                
+                button.classList.add("active");
+                document.getElementById(button.dataset.tab).classList.add("active");
+            });
+        });
+        
+        // --- Tải Dữ Liệu Chung ---
+        
+        async function loadSports() {
+            try {
+                const sports = await callApi("/api/sports", "GET");
+                searchSportSelect.innerHTML = '<option value="">-- Chọn môn --</option>';
+                // Giả sử bạn có <select id="courtSport"> trong tab Owner
+                // const courtSportSelect = document.getElementById("courtSport");
+                // if (courtSportSelect) courtSportSelect.innerHTML = '<option value="">-- Chọn môn --</option>';
+                
+                sports.forEach(sport => {
+                    const option1 = new Option(sport.name, sport.id);
+                    const option2 = new Option(sport.name, sport.id);
+                    searchSportSelect.add(option1);
+                    // if (courtSportSelect) courtSportSelect.add(option2);
+                });
+            } catch (error) {
+                showMessage("Lỗi tải danh sách môn thể thao: " + error.message, true);
+            }
+        }
+
+        // --- Hàm Điền Form / Hiển thị ---
+        
+        function populateProfileForm(user) {
+            document.getElementById("profileName").value = user.display_name || '';
+            document.getElementById("profileFirstName").value = user.first_name || '';
+            document.getElementById("profileLastName").value = user.last_name || '';
+            document.getElementById("profilePhone").value = user.phone_number || '';
+            document.getElementById("profileBio").value = user.bio || '';
+        }
+        
+        // (MỚI) Hiển thị kết quả tìm sân (Style Card)
+        function renderSearchResults(courts, duration) {
+            searchResultsList.innerHTML = '';
+            if (courts.length === 0) {
+                searchResultsList.innerHTML = '<p>Không tìm thấy sân trống nào phù hợp.</p>';
+                return;
+            }
+            
+            const searchParams = {
+                sport_id: document.getElementById("searchSport").value,
+                date: document.getElementById("searchDate").value,
+                time_start: document.getElementById("searchTime").value,
+                duration: duration
+            };
+            
+            courts.forEach(court => {
+                const courtDiv = document.createElement('div');
+                courtDiv.className = 'court-result-item';
+                
+                const totalPrice = parseFloat(court.price_per_hour) * parseFloat(duration);
+                
+                courtDiv.innerHTML = `
+                    <div class="avatar">🏟️</div>
+                    <div class="info">
+                        <h4>${court.name} (Tại: ${court.venue_name})</h4>
+                        <div class="sport-tags">SPORT_ID: ${court.sport_id}</div>
+                        <p class="bio">${court.address}</p>
+                    </div>
+                    <div class="location">
+                        <p>Giá: ${court.price_per_hour} VND/giờ</p>
+                        <p><b>Tổng: ${totalPrice.toLocaleString('vi-VN')} VND</b></p>
+                        <button class="book-btn" 
+                            data-court-id="${court.id}"
+                            data-court-name="${court.name}"
+                            data-owner-id="${court.owner_id}"
+                            data-total-price="${totalPrice}"
+                        >Tạo Trận & Đặt Sân</button>
+                    </div>
+                `;
+                
+                // Gắn data tìm kiếm vào nút
+                const button = courtDiv.querySelector('.book-btn');
+                button.dataset.searchParams = JSON.stringify(searchParams);
+                
+                searchResultsList.appendChild(courtDiv);
+            });
+        }
+
+        // --- Event Handlers (Sự kiện) ---
+        
+        // --- Xử lý Form ĐĂNG NHẬP ---
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            showMessage("Đang đăng nhập...", false);
+            try {
+                const email = document.getElementById("loginEmail").value;
+                const password = document.getElementById("loginPassword").value;
+                
+                const data = await callApi("/api/auth/login", "POST", { email, password });
+                
+                showMessage(`Chào mừng, ${data.display_name}!`, false);
+                
+                authContainer.style.display = 'none';
+                appContainer.style.display = 'block';
+                welcomeMessage.textContent = `Chào, ${data.display_name} (Vai trò: ${data.role})`;
+                
+                populateProfileForm(data);
+                localStorage.setItem("currentUser", JSON.stringify(data));
+                
+                // PHÂN VAI TRÒ
+                if (data.role === 'owner') {
+                    ownerTab.style.display = 'block';
+                    playerTab.style.display = 'block'; // Owner vẫn có thể tìm sân
+                    document.getElementById('player-hero').style.display = 'none'; // Ẩn hero search
+                    ownerTab.click(); 
+                } else {
+                    playerTab.style.display = 'block';
+                    ownerTab.style.display = 'none';
+                    document.getElementById('player-hero').style.display = 'block'; // Hiện hero search
+                    playerTab.click();
+                }
+                
+                loadSports();
+
+            } catch (error) {
+                showMessage("Lỗi Đăng Nhập:\n" + error.message, true);
+            }
+        });
+
+        // --- Xử lý Form ĐĂNG KÝ (Đã sửa) ---
+        registerForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            showMessage("Đang đăng ký...", false);
+            try {
+                const body = {
+                    display_name: document.getElementById("regName").value,
+                    email: document.getElementById("regEmail").value,
+                    password: document.getElementById("regPassword").value,
+                    role: document.getElementById("regRole").value // Lấy vai trò
+                };
+                
+                const data = await callApi("/api/auth/register", "POST", body);
+                
+                showMessage("Tạo tài khoản thành công! Vui lòng đăng nhập.", false);
+                registerForm.reset();
+                
+            } catch (error) {
+                showMessage("Lỗi Đăng Ký:\n" + error.message, true);
+            }
+        });
+        
+        // --- Xử lý Form CẬP NHẬT PROFILE (Đã sửa) ---
+        profileForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            showMessage("Đang cập nhật...", false);
+            try {
+                const user = getCurrentUser();
+                if (!user) throw new Error("Bạn không đăng nhập!");
+                
+                const newProfileData = {
+                    user_id: user.id,
+                    display_name: document.getElementById("profileName").value,
+                    first_name: document.getElementById("profileFirstName").value,
+                    last_name: document.getElementById("profileLastName").value,
+                    phone_number: document.getElementById("profilePhone").value,
+                    bio: document.getElementById("profileBio").value
+                };
+
+                const data = await callApi("/api/profile", "PUT", newProfileData);
+                showMessage(data.message, false);
+                
+                Object.assign(user, newProfileData);
+                localStorage.setItem("currentUser", JSON.stringify(user));
+                welcomeMessage.textContent = `Chào, ${user.display_name} (Vai trò: ${user.role})`;
+
+            } catch (error) {
+                showMessage("Lỗi Cập Nhật:\n" + error.message, true);
+            }
+        });
+        
+        // --- (MỚI) Xử lý Form TÌM SÂN (PLAYER) ---
+        playerSearchForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            showMessage("Đang tìm sân...", false);
+            
+            try {
+                const sport_id = document.getElementById("searchSport").value;
+                const date = document.getElementById("searchDate").value;
+                const time_start = document.getElementById("searchTime").value;
+                const duration = parseFloat(document.getElementById("searchDuration").value);
+                
+                const start_datetime = new Date(`${date}T${time_start}`);
+                const end_datetime = new Date(start_datetime.getTime() + duration * 60 * 60 * 1000);
+                
+                const formatDateTime = (dt) => dt.toISOString().slice(0, 19).replace('T', ' ');
+                const start_time_sql = formatDateTime(start_datetime);
+                const end_time_sql = formatDateTime(end_datetime);
+                
+                const endpoint = `/api/courts/search?sport_id=${sport_id}&start=${start_time_sql}&end=${end_time_sql}`;
+                
+                const courts = await callApi(endpoint, "GET");
+                
+                renderSearchResults(courts, duration);
+                playerTab.click(); // Tự động chuyển sang tab Kết quả
+                showMessage(`Tìm thấy ${courts.length} sân trống.`, false);
+                
+            } catch(error) {
+                showMessage("Lỗi Tìm Sân:\n" + error.message, true);
+            }
+        });
+
+        // --- (MỚI) Xử lý TẠO TRẬN & ĐẶT SÂN (PLAYER) ---
+        searchResultsList.addEventListener("click", async (event) => {
+            if (!event.target.classList.contains('book-btn')) return;
+            
+            const button = event.target;
+            const courtName = button.dataset.courtName;
+            
+            const title = prompt(`Bạn đang đặt sân "${courtName}".\nVui lòng nhập Tiêu đề trận đấu:`);
+            
+            if (!title) {
+                showMessage("Đã hủy đặt sân.", true);
+                return;
+            }
+            
+            showMessage("Đang gửi yêu cầu đặt sân...", false);
+            
+            try {
+                const searchParams = JSON.parse(button.dataset.searchParams);
+                const start_datetime = new Date(`${searchParams.date}T${searchParams.time_start}`);
+                const end_datetime = new Date(start_datetime.getTime() + parseFloat(searchParams.duration) * 60 * 60 * 1000);
+                const formatDateTime = (dt) => dt.toISOString().slice(0, 19).replace('T', ' ');
+                
+                const body = {
+                    creator_id: getCurrentUser().id,
+                    sport_id: searchParams.sport_id,
+                    title: title,
+                    start_time: formatDateTime(start_datetime),
+                    end_time: formatDateTime(end_datetime),
+                    court_id: button.dataset.courtId,
+                    owner_id: button.dataset.ownerId,
+                    total_price: button.dataset.totalPrice
+                };
+                
+                const data = await callApi("/api/matches", "POST", body);
+                
+                showMessage("Đã gửi yêu cầu đặt sân thành công! ID Booking: " + data.insertId, false);
+                searchResultsList.innerHTML = '<p>Đã gửi yêu cầu thành công. Vui lòng tìm lại nếu muốn đặt sân khác.</p>';
+                
+            } catch(error) {
+                showMessage("Lỗi Đặt Sân:\n" + error.message, true);
+            }
+        });
+
+        // --- Xử lý ĐĂNG XUẤT ---
+        logoutButton.addEventListener("click", () => {
+            localStorage.removeItem("currentUser");
+            authContainer.style.display = 'flex';
+            appContainer.style.display = 'none';
+            // Reset tab
+            profileTab.click();
+            showMessage("Đã đăng xuất.", false);
+        });
+
+        // (Lưu ý: Bạn cần tự thêm lại các hàm xử lý cho Tab Owner (Tạo Venue, Tạo Court) từ tin nhắn trước)
+        
+    </script>
+</body>
+</html>
