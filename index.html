@@ -4,65 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vui Thể Thao - Kết nối đam mê</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary: #1877f2; --green: #42b72a; --red: #dc3545; --bg: #f0f2f5; --white: #ffffff; --text: #1c1e21; }
-        body { font-family: Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
-        * { box-sizing: border-box; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
+        /* === CÀI ĐẶT CHUNG (MODERN UI) === */
+        :root {
+            --primary: #2563eb;       /* Xanh dương hiện đại */
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;     /* Xám xanh */
+            --green: #10b981;         /* Xanh lá tươi */
+            --red: #ef4444;           /* Đỏ */
+            --bg: #f3f4f6;            /* Nền xám nhạt */
+            --white: #ffffff;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            color: var(--text-main); 
+            line-height: 1.5;
+        }
         
-        /* UI Components */
-        button { border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
-        .btn-primary { background: var(--primary); } .btn-success { background: var(--green); } .btn-danger { background: var(--red); }
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+
+        /* === COMPONENTS === */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        button { 
+            border: none; padding: 12px 20px; border-radius: 8px; 
+            cursor: pointer; font-weight: 600; font-size: 14px; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        button:active { transform: scale(0.98); }
+
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        
+        .btn-success { background: var(--green); color: white; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); }
+        .btn-success:hover { filter: brightness(90%); transform: translateY(-1px); }
+        
+        .btn-danger { background: var(--red); color: white; }
+        .btn-danger:hover { filter: brightness(90%); }
+
         .btn-block { width: 100%; }
+
+        input, select, textarea { 
+            width: 100%; padding: 12px 15px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: #f9fafb;
+            font-family: inherit; font-size: 14px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+        input:focus, select:focus, textarea:focus { 
+            outline: none; border-color: var(--primary); 
+            background: white; 
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); 
+        }
+        label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; color: var(--text-main); }
+
+        /* === LAYOUT === */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { 
+            background: var(--white); padding: 25px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        h3, h4, h5 { margin-top: 0; color: var(--text-main); }
+        h3 { font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
+
+        /* === AUTH SCREEN === */
+        #auth-container { 
+            min-height: 100vh; display: flex; 
+            align-items: center; justify-content: center; 
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3f4f6 100%);
+        }
+        .auth-box { 
+            background: var(--white); padding: 40px; width: 100%; max-width: 450px; 
+            border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+        }
+        .auth-header h2 { color: var(--primary); margin-bottom: 5px; text-align: center; }
+        .auth-header p { color: var(--text-light); text-align: center; margin-top: 0; margin-bottom: 30px; font-size: 0.9rem; }
+
+        /* === NAVIGATION === */
+        .top-nav { 
+            background: var(--white); height: 70px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            position: sticky; top: 0; z-index: 50; 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px;
+        }
+        .logo { font-size: 24px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+        .user-menu { display: flex; align-items: center; gap: 15px; }
+        #welcomeMsg { font-weight: 600; color: var(--text-main); }
+
+        /* === HERO SECTION === */
+        .hero-header { 
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('https://images.unsplash.com/photo-1542567431-031e403659e7?q=80'); 
+            background-size: cover; background-position: center; 
+            padding: 60px 20px; text-align: center; color: white; 
+            margin-bottom: 30px;
+        }
+        .hero-header h1 { font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; font-family: inherit; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        #playerSearchForm { 
+            display: flex; flex-wrap: wrap; gap: 10px; 
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); 
+            padding: 20px; border-radius: 12px; 
+            max-width: 950px; margin: 0 auto; 
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        #playerSearchForm input, #playerSearchForm select { margin: 0; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #playerSearchForm button { height: 45px; padding: 0 30px; font-size: 16px; }
+
+        /* === TABS === */
+        .tab-nav { 
+            display: flex; background: var(--white); 
+            border-radius: 12px; padding: 5px; 
+            box-shadow: var(--shadow); margin-bottom: 30px;
+        }
+        .tab-btn { 
+            flex: 1; padding: 12px; border-radius: 8px; 
+            background: transparent; color: var(--text-light); 
+            transition: all 0.3s;
+        }
+        .tab-btn:hover { background: #f3f4f6; color: var(--primary); }
+        .tab-btn.active { background: var(--primary); color: white; shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
         
-        /* Auth */
-        #auth-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: white; padding: 30px; width: 100%; max-width: 400px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        
-        /* App */
-        #app-container { display: none; }
-        .top-nav { background: white; padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
-        .logo { font-size: 24px; font-weight: 800; color: var(--primary); }
-        
-        .hero-header { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542567431-031e403659e7?q=80'); background-size: cover; padding: 40px 20px; text-align: center; color: white; }
-        #playerSearchForm { display: flex; flex-wrap: wrap; gap: 10px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; max-width: 900px; margin: 20px auto 0; justify-content: center; }
-        #playerSearchForm input, #playerSearchForm select { margin: 0; flex: 1; min-width: 120px; }
-        
-        /* Tabs */
-        .tab-nav { display: flex; background: white; margin: 20px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-        .tab-btn { flex: 1; padding: 15px; border: none; background: none; cursor: pointer; font-weight: 600; color: #666; border-bottom: 3px solid transparent; }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); background: #f0f7ff; }
-        .tab-content { display: none; }
+        .tab-content { display: none; animation: fadeEffect 0.4s; }
+        @keyframes fadeEffect { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
         .tab-content.active { display: block; }
+
+        .sub-tabs { display: flex; gap: 10px; border-bottom: 2px solid var(--border); margin-bottom: 20px; padding-bottom: 10px; }
+        .sub-tab-btn { 
+            padding: 8px 16px; cursor: pointer; color: var(--text-light); 
+            font-weight: 600; border-radius: 20px; 
+        }
+        .sub-tab-btn.active { background: #e0f2fe; color: var(--primary); }
+
+        /* === LIST ITEMS (MATCHES, COURTS) === */
+        .match-card, .court-result-item, .booking-item { 
+            background: var(--white); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 20px; margin-bottom: 15px; 
+            display: flex; align-items: center; gap: 20px; 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .match-card:hover, .court-result-item:hover { 
+            transform: translateY(-3px); 
+            box-shadow: var(--shadow-hover); 
+            border-color: var(--primary);
+        }
         
-        /* Lists */
-        .match-card, .court-result-item, .booking-item, .venue-item { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
-        .match-card { display: flex; align-items: center; gap: 15px; }
-        .avatar { width: 50px; height: 50px; background: #e7f3ff; color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .avatar { 
+            width: 60px; height: 60px; background: #dbeafe; color: var(--primary); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+            font-size: 28px; flex-shrink: 0; 
+        }
         .info-col { flex: 1; }
-        .action-col { text-align: right; }
-
-        .sub-tabs { display: flex; margin-bottom: 15px; border-bottom: 1px solid #ddd; }
-        .sub-tab-btn { padding: 10px 20px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; }
-        .sub-tab-btn.active { color: var(--primary); border-color: var(--primary); font-weight: bold; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .close { float: right; font-size: 24px; cursor: pointer; }
-        .modal-info { background: #e7f3ff; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.9em; }
+        .info-col h4 { margin: 0 0 5px; color: var(--text-main); font-size: 1.1rem; }
+        .info-col p { margin: 2px 0; font-size: 0.9rem; color: var(--text-light); }
         
-        #messageArea { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; color: white; border-radius: 5px; display: none; z-index: 9999; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .venue-item { 
+            padding: 15px; border: 1px solid var(--border); 
+            border-radius: 8px; margin-bottom: 8px; cursor: pointer; 
+            background: #f9fafb;
+        }
+        .venue-item:hover { background: #fff; border-color: var(--primary); }
+        .venue-item.active { background: #eff6ff; border-color: var(--primary); }
+
+        /* === MODAL === */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
+        .modal-content { background: var(--white); padding: 30px; border-radius: 16px; width: 90%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: slideUp 0.3s; }
+        @keyframes slideUp { from {transform:translateY(50px); opacity:0} to {transform:translateY(0); opacity:1} }
+        .close-modal { float: right; font-size: 28px; cursor: pointer; color: var(--text-light); }
+        .close-modal:hover { color: var(--red); }
         
-        @media (max-width: 768px) { 
-            .grid-2 { grid-template-columns: 1fr; } 
-            .match-card { flex-direction: column; align-items: flex-start; }
-            .action-col { width: 100%; text-align: left; margin-top: 10px; }
+        .modal-info { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; line-height: 1.6; }
+
+        /* === TOAST NOTIFICATION === */
+        #messageArea { 
+            position: fixed; bottom: 30px; right: 30px; 
+            padding: 15px 25px; color: white; border-radius: 8px; 
+            display: none; z-index: 9999; font-weight: 600; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+            animation: slideInRight 0.3s;
+        }
+        @keyframes slideInRight { from {transform:translateX(100%)} to {transform:translateX(0)} }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            #playerSearchForm { flex-direction: column; }
+            .match-card, .court-result-item { flex-direction: column; align-items: flex-start; }
+            .action-col { width: 100%; margin-top: 10px; display: flex; gap: 10px; }
             .tab-nav { flex-wrap: wrap; }
+            .tab-btn { font-size: 13px; padding: 10px; }
+            .hero-header h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -70,56 +217,73 @@
 
     <div id="auth-container">
         <div id="login-card" class="auth-box">
-            <h2 style="text-align:center; color:var(--primary)">Đăng Nhập</h2>
+            <div class="auth-header">
+                <h2>Chào Mừng Trở Lại!</h2>
+                <p>Đăng nhập để tiếp tục đam mê thể thao</p>
+            </div>
             <form id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email" required>
-                <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="name@example.com" required>
+                <label>Mật khẩu</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required>
                 <button type="submit" class="btn-primary btn-block">Đăng Nhập</button>
             </form>
-            <p style="text-align:center; margin-top:15px"><a href="#" onclick="toggleAuth()">Chưa có tài khoản?</a></p>
+            <p style="text-align:center; margin-top:20px; font-size:14px;">
+                Chưa có tài khoản? <a href="#" onclick="toggleAuth()" style="color:var(--primary); text-decoration:none; font-weight:600">Đăng ký ngay</a>
+            </p>
         </div>
+
         <div id="register-card" class="auth-box" style="display:none">
-            <h2 style="text-align:center; color:var(--green)">Đăng Ký</h2>
+            <div class="auth-header">
+                <h2>Tạo Tài Khoản Mới</h2>
+                <p>Tham gia cộng đồng thể thao ngay hôm nay</p>
+            </div>
             <form id="registerForm">
-                <input type="text" id="regName" placeholder="Tên hiển thị" required>
-                <input type="email" id="regEmail" placeholder="Email" required>
-                <input type="password" id="regPassword" placeholder="Mật khẩu" required>
+                <label>Tên hiển thị</label>
+                <input type="text" id="regName" placeholder="Ví dụ: Hùng Cầu Lông" required>
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="name@example.com" required>
+                <label>Mật khẩu</label>
+                <input type="password" id="regPassword" placeholder="••••••••" required>
+                <label>Bạn là ai?</label>
                 <select id="regRole">
-                    <option value="player">Người chơi</option>
-                    <option value="owner">Chủ sân</option>
+                    <option value="player">Người chơi (Tìm sân & Tham gia)</option>
+                    <option value="owner">Chủ sân (Quản lý sân bãi)</option>
                 </select>
-                <button type="submit" class="btn-success btn-block">Tạo Tài Khoản</button>
+                <button type="submit" class="btn-success btn-block">Đăng Ký</button>
             </form>
-            <p style="text-align:center; margin-top:15px"><a href="#" onclick="toggleAuth()">Đã có tài khoản?</a></p>
+            <p style="text-align:center; margin-top:20px; font-size:14px;">
+                Đã có tài khoản? <a href="#" onclick="toggleAuth()" style="color:var(--primary); text-decoration:none; font-weight:600">Đăng nhập</a>
+            </p>
         </div>
     </div>
 
     <div id="app-container" style="display:none">
         <nav class="top-nav">
             <div class="logo">VUI THỂ THAO</div>
-            <div>
-                <span id="welcomeMsg" style="margin-right:10px; font-weight:bold"></span>
-                <button onclick="logout()" style="background:#eee; color:#333">Thoát</button>
+            <div class="user-menu">
+                <span id="welcomeMsg"></span>
+                <button onclick="logout()" style="background:#f3f4f6; color:#374151">🚪 Thoát</button>
             </div>
         </nav>
 
         <header class="hero-header" id="hero-section">
-            <h1>Tìm Kèo & Đặt Sân</h1>
+            <h1>Tìm Kèo & Đặt Sân Nhanh Chóng</h1>
             <form id="playerSearchForm">
                 <select id="searchSport" required><option value="">-- Chọn môn --</option></select>
                 <input type="date" id="searchDate" required>
                 <input type="time" id="searchTime" required>
-                <input type="number" id="searchDuration" placeholder="Giờ" value="2" step="0.5">
-                <button type="submit" class="btn-primary" style="background:#18A4E0">🔍 Tìm Sân</button>
+                <input type="number" id="searchDuration" placeholder="Thời lượng (h)" value="2" step="0.5" style="max-width:120px">
+                <button type="submit" class="btn-success">🔍 Tìm Sân Ngay</button>
             </form>
         </header>
 
         <div class="container">
             <div class="tab-nav">
-                <button class="tab-btn active" id="btn-tab-matches" onclick="openTab('tab-matches')">🏟️ Danh Sách Trận</button>
-                <button class="tab-btn" id="btn-tab-search" onclick="openTab('tab-search')">🔍 Kết Quả Tìm</button>
+                <button class="tab-btn active" id="btn-tab-matches" onclick="openTab('tab-matches')">🏟️ Trận Đấu</button>
+                <button class="tab-btn" id="btn-tab-search" onclick="openTab('tab-search')">🔍 Kết Quả Tìm Kiếm</button>
                 <button class="tab-btn" id="btn-tab-owner" onclick="openTab('tab-owner')">🛠️ Quản Lý Sân</button>
-                <button class="tab-btn" id="btn-tab-profile" onclick="openTab('tab-profile')">👤 Hồ Sơ</button>
+                <button class="tab-btn" id="btn-tab-profile" onclick="openTab('tab-profile')">👤 Hồ Sơ Cá Nhân</button>
             </div>
 
             <div id="tab-matches" class="tab-content active">
@@ -127,25 +291,30 @@
                     <div class="sub-tab-btn active" onclick="loadMatches('open', this)">🔥 Kèo Thơm (Đang mở)</div>
                     <div class="sub-tab-btn" onclick="loadMatches('mine', this)">📅 Lịch Của Tôi</div>
                 </div>
-                <div id="matches-list-container"><p>Đang tải...</p></div>
+                <div id="matches-list-container"><p style="text-align:center; color:var(--text-light)">Đang tải dữ liệu...</p></div>
             </div>
 
             <div id="tab-search" class="tab-content">
                 <h3>Kết quả tìm sân trống</h3>
-                <div id="search-results-list"><p style="color:#777">Hãy nhập thông tin tìm kiếm ở trên...</p></div>
+                <div id="search-results-list">
+                    <div style="text-align:center; padding:40px; color:var(--text-light)">
+                        <div style="font-size:40px; margin-bottom:10px">🔍</div>
+                        Hãy nhập thông tin tìm kiếm ở trên để tìm sân phù hợp...
+                    </div>
+                </div>
             </div>
 
             <div id="tab-profile" class="tab-content">
-                <div class="card">
-                    <h3>Cập nhật thông tin</h3>
+                <div class="card" style="max-width:700px; margin:0 auto">
+                    <h3>Thông tin cá nhân</h3>
                     <form id="profileForm">
                         <div class="grid-2">
-                            <input type="text" id="pFirstName" placeholder="Họ đệm">
-                            <input type="text" id="pLastName" placeholder="Tên">
+                            <div><label>Họ đệm</label><input type="text" id="pFirstName"></div>
+                            <div><label>Tên</label><input type="text" id="pLastName"></div>
                         </div>
-                        <input type="text" id="pName" placeholder="Tên hiển thị">
-                        <input type="text" id="pPhone" placeholder="Số điện thoại">
-                        <textarea id="pBio" rows="3" placeholder="Giới thiệu bản thân..."></textarea>
+                        <label>Tên hiển thị</label><input type="text" id="pName">
+                        <label>Số điện thoại</label><input type="text" id="pPhone">
+                        <label>Giới thiệu</label><textarea id="pBio" rows="3"></textarea>
                         <button type="submit" class="btn-primary">Lưu Thay Đổi</button>
                     </form>
                 </div>
@@ -154,33 +323,33 @@
             <div id="tab-owner" class="tab-content">
                 <div class="grid-2">
                     <div class="card">
-                        <h4>1. Tạo Khu Sân</h4>
+                        <h3>1. Tạo Khu Sân (Venue)</h3>
                         <form id="venueForm">
-                            <input type="text" id="vName" placeholder="Tên khu sân" required>
-                            <input type="text" id="vAddr" placeholder="Địa chỉ" required>
-                            <button type="submit" class="btn-primary" style="width:100%">+ Tạo Khu</button>
+                            <label>Tên khu sân</label><input type="text" id="vName" placeholder="VD: Sân Cầu Lông A" required>
+                            <label>Địa chỉ</label><input type="text" id="vAddr" placeholder="Địa chỉ chi tiết" required>
+                            <button type="submit" class="btn-primary btn-block">+ Tạo Khu Mới</button>
                         </form>
                     </div>
                     <div class="card">
-                        <h4>2. Thêm Sân Con</h4>
-                        <button onclick="loadVenues()" style="background:#eee; color:#333; width:100%; margin-bottom:10px">🔄 Tải DS Khu</button>
-                        <div id="owner-venues-list" style="max-height:150px; overflow-y:auto; margin-bottom:10px"></div>
+                        <h3>2. Thêm Sân Con (Court)</h3>
+                        <button onclick="loadVenues()" style="background:#f3f4f6; color:#374151; width:100%; margin-bottom:15px">🔄 Tải Danh Sách Khu</button>
+                        <div id="owner-venues-list" style="max-height:200px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border); border-radius:8px;"></div>
                         
-                        <div id="court-form-wrapper" style="display:none; border-top:1px dashed #ccc; padding-top:10px">
-                            <h5>Thêm vào: <span id="selectedVenueName" style="color:var(--primary)"></span></h5>
+                        <div id="court-form-wrapper" style="display:none; border-top:1px dashed var(--border); padding-top:15px; background:#f9fafb; padding:15px; border-radius:8px;">
+                            <h5 style="margin:0 0 15px 0; color:var(--primary)">Thêm sân vào: <span id="selectedVenueName"></span></h5>
                             <form id="courtForm">
-                                <input type="text" id="cName" placeholder="Tên sân (Sân 1)" required>
-                                <input type="number" id="cPrice" placeholder="Giá/giờ" required>
-                                <select id="cSport" required><option value="">-- Chọn môn --</option></select>
-                                <button type="submit" class="btn-success" style="width:100%">+ Thêm Sân</button>
+                                <label>Tên sân con</label><input type="text" id="cName" placeholder="VD: Sân số 1" required>
+                                <label>Giá tiền / giờ</label><input type="number" id="cPrice" placeholder="VNĐ" required>
+                                <label>Môn thể thao</label><select id="cSport" required><option value="">-- Chọn môn --</option></select>
+                                <button type="submit" class="btn-success btn-block" style="margin-top:10px">+ Thêm Sân</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <h4>3. Duyệt Yêu Cầu</h4>
-                    <button onclick="loadPendingBookings()" style="background:#ffc107; color:#333">🔄 Tải Yêu Cầu</button>
-                    <div id="pending-bookings-list" style="margin-top:15px"></div>
+                    <h3>3. Duyệt Yêu Cầu Đặt Sân</h3>
+                    <button onclick="loadPendingBookings()" style="background:#fef3c7; color:#92400e; margin-bottom:15px">🔄 Tải Yêu Cầu Mới</button>
+                    <div id="pending-bookings-list"></div>
                 </div>
             </div>
         </div>
@@ -188,22 +357,38 @@
 
     <div id="createMatchModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3 style="color:var(--primary); margin-top:0">Thông Tin Trận Đấu</h3>
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="color:var(--primary); margin-top:0; text-align:center">Tạo Trận Đấu Mới</h2>
             <div id="modalCourtInfo" class="modal-info"></div>
+            
             <form id="createMatchForm">
                 <label>Tiêu đề trận đấu</label>
-                <input type="text" id="mTitle" placeholder="VD: Cầu lông giao lưu" required>
-                <label>Mô tả</label>
-                <textarea id="mDesc" rows="2" placeholder="Chi tiết..."></textarea>
+                <input type="text" id="mTitle" placeholder="VD: Giao lưu vui vẻ sáng T7" required>
+                
+                <label>Mô tả chi tiết</label>
+                <textarea id="mDesc" rows="3" placeholder="VD: Cần tìm 2 bạn trình độ trung bình, tiền sân chia đều..."></textarea>
+                
                 <div class="grid-2">
-                    <div><label>Trình độ</label><select id="mSkill"><option value="all">Mọi trình độ</option><option value="beginner">Mới chơi</option><option value="intermediate">Trung bình</option><option value="advanced">Nâng cao</option></select></div>
-                    <div><label>Số người</label><input type="number" id="mMax" value="4" min="2"></div>
+                    <div>
+                        <label>Trình độ yêu cầu</label>
+                        <select id="mSkill">
+                            <option value="all">Mọi trình độ</option>
+                            <option value="beginner">Mới chơi</option>
+                            <option value="intermediate">Trung bình</option>
+                            <option value="advanced">Nâng cao</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Số người tối đa</label>
+                        <input type="number" id="mMax" value="4" min="2" required>
+                    </div>
                 </div>
+                
                 <input type="hidden" id="hCourtId"><input type="hidden" id="hOwnerId">
                 <input type="hidden" id="hPrice"><input type="hidden" id="hSportId">
                 <input type="hidden" id="hDate"><input type="hidden" id="hTime"><input type="hidden" id="hDur">
-                <button type="submit" class="btn-success btn-block">✅ Xác Nhận & Đặt Sân</button>
+                
+                <button type="submit" class="btn-success btn-block" style="margin-top:10px; padding:15px">✅ Xác Nhận & Đặt Sân</button>
             </form>
         </div>
     </div>
@@ -211,15 +396,17 @@
     <div id="messageArea"></div>
 
     <script>
-        // 🛑 SỬA URL NÀY
+        // 🛑 CẤU HÌNH URL API
         const API = "https://cnpm-ub8a.onrender.com"; 
         let sportsList = [];
 
-        // CORE
+        /* --- UI HELPER FUNCTIONS --- */
         function showMsg(text, isError=false) {
             const el = document.getElementById('messageArea');
-            el.textContent = text; el.style.background = isError ? 'var(--red)' : 'var(--green)';
-            el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000);
+            el.textContent = text; 
+            el.style.background = isError ? 'var(--red)' : 'var(--green)';
+            el.style.display = 'block'; 
+            setTimeout(() => el.style.display = 'none', 3000);
         }
         function toggleAuth() {
             const log = document.getElementById('login-card');
@@ -231,19 +418,21 @@
             document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            const btn = document.getElementById('btn-'+id); if(btn) btn.classList.add('active');
+            const btn = document.getElementById('btn-'+id); 
+            if(btn) btn.classList.add('active');
         }
         function getUser() { return JSON.parse(localStorage.getItem('user')); }
+        
         async function api(url, method='GET', body=null) {
             const opts = { method, headers: {} };
             if(body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
             const res = await fetch(API + url, opts);
             const data = await res.json();
-            if(!res.ok) throw new Error(data.error || 'Lỗi API');
+            if(!res.ok) throw new Error(data.error || 'Lỗi kết nối server');
             return data;
         }
 
-        // AUTH
+        /* --- AUTHENTICATION --- */
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -253,6 +442,7 @@
                 localStorage.setItem('user', JSON.stringify(data)); initApp(data);
             } catch(err) { showMsg(err.message, true); }
         });
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -264,20 +454,23 @@
             } catch(err) { showMsg(err.message, true); }
         });
 
+        /* --- APP INITIALIZATION --- */
         function initApp(user) {
             document.getElementById('auth-container').style.display='none';
             document.getElementById('app-container').style.display='block';
             document.getElementById('welcomeMsg').textContent = `Hi, ${user.display_name}`;
             document.getElementById('searchDate').valueAsDate = new Date();
             
-            // Profile
+            // Fill Profile Data
             document.getElementById('pName').value = user.display_name || '';
             document.getElementById('pFirstName').value = user.first_name || '';
             document.getElementById('pLastName').value = user.last_name || '';
             document.getElementById('pPhone').value = user.phone_number || '';
             document.getElementById('pBio').value = user.bio || '';
+
             loadSports();
 
+            // Role-based View
             if(user.role === 'owner') {
                 document.getElementById('hero-section').style.display = 'none';
                 document.getElementById('btn-tab-matches').style.display = 'none';
@@ -294,7 +487,7 @@
             }
         }
 
-        // DATA
+        /* --- COMMON DATA --- */
         async function loadSports() {
             try {
                 sportsList = await api('/api/sports');
@@ -305,58 +498,84 @@
         }
         function getSportName(id) { const s = sportsList.find(x=>x.id==id); return s?s.name:'Thể thao'; }
 
-        // OWNER
+        /* --- OWNER LOGIC --- */
         document.getElementById('venueForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
                 await api('/api/venues', 'POST', { owner_id: getUser().id, name: document.getElementById('vName').value, address: document.getElementById('vAddr').value });
-                showMsg("Thành công!"); loadVenues(); document.getElementById('venueForm').reset();
+                showMsg("Tạo khu sân thành công!"); loadVenues(); document.getElementById('venueForm').reset();
             } catch(e) { showMsg(e.message, true); }
         });
+
         let curVenueId = null;
         async function loadVenues() {
-            const data = await api(`/api/venues/my-venues?owner_id=${getUser().id}`);
-            document.getElementById('owner-venues-list').innerHTML = data.map(v => `<div class="venue-item" onclick="selectVenue(${v.id}, '${v.name}')"><b>${v.name}</b><br>${v.address}</div>`).join('');
+            try {
+                const data = await api(`/api/venues/my-venues?owner_id=${getUser().id}`);
+                document.getElementById('owner-venues-list').innerHTML = data.map(v => 
+                    `<div class="venue-item" onclick="selectVenue(this, ${v.id}, '${v.name}')">
+                        <div style="font-weight:600; color:var(--primary)">${v.name}</div>
+                        <div style="font-size:13px; color:var(--text-light)">${v.address}</div>
+                    </div>`
+                ).join('');
+            } catch(e){}
         }
-        function selectVenue(id, name) {
-            curVenueId=id; document.getElementById('court-form-wrapper').style.display='block';
-            document.getElementById('selectedVenueName').innerText=name; loadCourts(id);
+
+        function selectVenue(el, id, name) {
+            curVenueId = id;
+            document.querySelectorAll('.venue-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('court-form-wrapper').style.display='block';
+            document.getElementById('selectedVenueName').innerText=name; 
+            loadCourts(id);
         }
+
         document.getElementById('courtForm').addEventListener('submit', async (e) => {
             e.preventDefault(); if(!curVenueId) return;
             try {
                 await api('/api/courts', 'POST', { venue_id: curVenueId, sport_id: document.getElementById('cSport').value, name: document.getElementById('cName').value, price_per_hour: document.getElementById('cPrice').value });
-                showMsg("Thành công!"); loadCourts(curVenueId);
+                showMsg("Thêm sân thành công!"); loadCourts(curVenueId);
             } catch(e) { showMsg(e.message, true); }
         });
+
         async function loadCourts(vid) {
             const data = await api(`/api/courts?venue_id=${vid}`);
-            document.getElementById('courts-list').innerHTML = data.map(c => `<div>- ${c.name} (${parseInt(c.price_per_hour).toLocaleString()}đ/h)</div>`).join('');
+            document.getElementById('courts-list').innerHTML = data.map(c => 
+                `<div style="padding:8px; border-bottom:1px solid #eee; font-size:14px">
+                    <b>${c.name}</b> - ${parseInt(c.price_per_hour).toLocaleString()}đ/h 
+                    <span style="background:#e0f2fe; padding:2px 6px; border-radius:4px; font-size:12px; margin-left:5px">${getSportName(c.sport_id)}</span>
+                </div>`
+            ).join('');
         }
+
         async function loadPendingBookings() {
             const data = await api(`/api/bookings/owner?owner_id=${getUser().id}`);
             document.getElementById('pending-bookings-list').innerHTML = data.length ? data.map(b => `
                 <div class="booking-item">
-                    <div class="info-col"><h4>${b.title}</h4><p>${b.court_name} | ${parseInt(b.total_price).toLocaleString()}đ</p></div>
+                    <div class="info-col">
+                        <h4>${b.title}</h4>
+                        <p>Sân: <b>${b.court_name}</b></p>
+                        <p>Thời gian: ${new Date(b.start_time).toLocaleString('vi-VN')}</p>
+                        <p style="color:var(--primary); font-weight:bold">Tiền: ${parseInt(b.total_price).toLocaleString()}đ</p>
+                    </div>
                     <div class="action-col">
                         <button class="btn-success" onclick="handleBook(${b.id}, 'approve')">Duyệt</button>
                         <button class="btn-danger" onclick="handleBook(${b.id}, 'reject')">Hủy</button>
                     </div>
-                </div>`).join('') : '<p>Không có yêu cầu.</p>';
+                </div>`).join('') : '<p style="text-align:center; color:#999">Không có yêu cầu nào.</p>';
         }
         async function handleBook(bid, act) {
-            try { await api('/api/bookings/action', 'PUT', { owner_id: getUser().id, booking_id: bid, action: act }); showMsg("Đã xử lý"); loadPendingBookings(); }
+            try { await api('/api/bookings/action', 'PUT', { owner_id: getUser().id, booking_id: bid, action: act }); showMsg("Đã xử lý!"); loadPendingBookings(); }
             catch(e) { showMsg(e.message, true); }
         }
 
-        // PLAYER
+        /* --- PLAYER LOGIC --- */
         document.getElementById('playerSearchForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); showMsg("Đang tìm...");
+            e.preventDefault(); showMsg("Đang tìm sân...");
             const sid = document.getElementById('searchSport').value;
             const date = document.getElementById('searchDate').value;
             const time = document.getElementById('searchTime').value;
             const dur = parseFloat(document.getElementById('searchDuration').value);
-            const start = `${date} ${time}:00`;
+            const start = `${date} ${time}:00`; 
             const d = new Date(`${date}T${time}`);
             d.setHours(d.getHours() + Math.floor(dur)); d.setMinutes(d.getMinutes() + (dur%1)*60);
             const end = d.toISOString().slice(0,19).replace('T',' ');
@@ -365,15 +584,24 @@
             try {
                 const data = await api(`/api/courts/search?sport_id=${sid}&start=${startISO}&end=${end}`);
                 const list = document.getElementById('search-results-list');
-                list.innerHTML = data.length ? data.map(c => {
-                    const total = c.price_per_hour * dur;
-                    const safeName = c.name.replace(/'/g, "\\'");
-                    return `<div class="court-result-item">
-                        <div class="avatar">🏟️</div>
-                        <div class="info-col"><h4>${c.name}</h4><p>${c.venue_name}</p><p style="color:var(--green); font-weight:bold">Tổng: ${total.toLocaleString()}đ</p></div>
-                        <div class="action-col"><button class="btn-success" onclick="openModal(${c.id}, '${safeName}', ${c.owner_id}, ${total}, ${sid}, '${startISO}', '${end}', ${dur})">Đặt Sân</button></div>
-                    </div>`
-                }).join('') : '<p>Không có sân trống.</p>';
+                if(data.length===0) { list.innerHTML = '<p style="text-align:center; padding:30px;">Không có sân trống.</p>'; }
+                else {
+                    list.innerHTML = data.map(c => {
+                        const total = c.price_per_hour * dur;
+                        const safeName = c.name.replace(/'/g, "\\'");
+                        return `<div class="court-result-item">
+                            <div class="avatar">🏟️</div>
+                            <div class="info-col">
+                                <h4>${c.name}</h4>
+                                <p>${c.venue_name}</p>
+                                <p style="color:var(--green); font-weight:bold">${parseInt(c.price_per_hour).toLocaleString()}đ/h <span style="color:#666; font-weight:normal">-> Tổng: ${total.toLocaleString()}đ</span></p>
+                            </div>
+                            <div class="action-col">
+                                <button class="btn-success" onclick="openModal(${c.id}, '${safeName}', ${c.owner_id}, ${total}, ${sid}, '${startISO}', '${end}', ${dur})">Đặt Sân</button>
+                            </div>
+                        </div>`
+                    }).join('');
+                }
                 openTab('tab-search');
             } catch(e) { showMsg(e.message, true); }
         });
@@ -382,16 +610,22 @@
             document.getElementById('hCourtId').value=cid; document.getElementById('hOwnerId').value=oid;
             document.getElementById('hPrice').value=total; document.getElementById('hSportId').value=sid;
             document.getElementById('hDate').value=start; document.getElementById('hTime').value=end; document.getElementById('hDur').value=dur;
-            document.getElementById('modalCourtInfo').innerHTML = `<b>Sân:</b> ${cname}<br><b>Tổng:</b> ${total.toLocaleString()} VNĐ`;
+            document.getElementById('modalCourtInfo').innerHTML = `
+                <p><strong>Sân:</strong> ${cname}</p>
+                <p><strong>Thời gian:</strong> ${start} ➝ ${end}</p>
+                <p style="font-size:1.1em; color:var(--green); margin-top:5px"><strong>Tổng tiền: ${total.toLocaleString()} VNĐ</strong></p>
+            `;
             document.getElementById('createMatchModal').style.display='flex';
         }
         function closeModal() { document.getElementById('createMatchModal').style.display='none'; }
+        window.onclick = function(event) { if (event.target == document.getElementById('createMatchModal')) closeModal(); }
 
         document.getElementById('createMatchForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
                 const user = getUser();
                 if(!user) { alert("Vui lòng đăng nhập!"); return; }
+                
                 await api('/api/matches', 'POST', {
                     creator_id: user.id, sport_id: document.getElementById('hSportId').value,
                     title: document.getElementById('mTitle').value, description: document.getElementById('mDesc').value,
@@ -400,33 +634,66 @@
                     court_id: document.getElementById('hCourtId').value, owner_id: document.getElementById('hOwnerId').value,
                     total_price: document.getElementById('hPrice').value
                 });
-                showMsg("Gửi yêu cầu thành công!"); closeModal(); 
-                document.getElementById('search-results-list').innerHTML = '<p style="color:green; text-align:center"><b>Đã gửi yêu cầu! Xem tại tab Lịch Của Tôi.</b></p>';
-            } catch(e) { console.error(e); showMsg(e.message, true); }
+
+                showMsg("Gửi yêu cầu thành công! Đang chuyển đến lịch...");
+                closeModal(); 
+                document.getElementById('createMatchForm').reset();
+                
+                // Auto switch to My Schedule
+                openTab('tab-matches');
+                const mineBtn = document.querySelectorAll('.sub-tab-btn')[1];
+                loadMatches('mine', mineBtn);
+                
+            } catch(e) { showMsg(e.message, true); }
         });
 
         async function loadMatches(type, btn) {
             if(btn) { document.querySelectorAll('.sub-tab-btn').forEach(e=>e.classList.remove('active')); btn.classList.add('active'); }
-            const list = document.getElementById('matches-list-container'); list.innerHTML='Loading...';
+            const list = document.getElementById('matches-list-container'); list.innerHTML='<p style="text-align:center">Đang tải...</p>';
             try {
                 const user = getUser();
                 const url = type === 'open' ? '/api/matches/open' : `/api/matches/mine?user_id=${user.id}`;
                 const data = await api(url);
-                list.innerHTML = data.length ? data.map(m => `
+                if(data.length===0) { list.innerHTML='<p style="text-align:center; padding:20px">Không có trận đấu nào.</p>'; return; }
+                
+                list.innerHTML = data.map(m => {
+                    // Logic hiển thị trạng thái hoặc nút tham gia
+                    let actionHTML = '';
+                    if (type === 'open') {
+                        actionHTML = `<button class="btn-success" onclick="joinMatch(${m.id})">Tham Gia</button>`;
+                    } else {
+                        // Logic màu sắc trạng thái
+                        let statusColor = '#f59e0b'; // Cam (Pending)
+                        let statusText = '⏳ Chờ duyệt';
+                        if(m.booking_status === 'payment_pending') { statusColor = '#10b981'; statusText = '✅ Đã duyệt / Chờ thanh toán'; }
+                        else if(m.booking_status === 'confirmed') { statusColor = '#10b981'; statusText = '✅ Đã cọc'; }
+                        else if(m.booking_status === 'rejected') { statusColor = '#ef4444'; statusText = '❌ Bị từ chối'; }
+                        
+                        actionHTML = `<span style="font-weight:bold; color:${statusColor}; background:rgba(255,255,255,0.8); padding:5px 10px; border-radius:20px; border:1px solid ${statusColor}">${statusText}</span>`;
+                    }
+
+                    return `
                     <div class="match-card">
                         <div class="avatar">⚽</div>
-                        <div class="info-col"><h4>${m.title}</h4><p>📍 ${m.venue_name}</p><p>⏰ ${new Date(m.start_time).toLocaleString('vi-VN')}</p></div>
-                        <div class="action-col">${type === 'open' ? `<button class="btn-success" onclick="joinMatch(${m.id})">Tham Gia</button>` : `<span style="font-weight:bold">${m.booking_status}</span>`}</div>
-                    </div>`).join('') : '<p>Không có trận nào.</p>';
-            } catch(e) { list.innerHTML='Lỗi tải'; }
+                        <div class="info-col">
+                            <h4>${m.title} <span style="font-weight:normal; font-size:12px; color:#666">(${m.sport_name})</span></h4>
+                            <p>📍 ${m.venue_name} - ${m.court_name}</p>
+                            <p>⏰ ${new Date(m.start_time).toLocaleString('vi-VN', {hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit'})}</p>
+                            <p>👤 ${m.current_players}/${m.max_players} người chơi</p>
+                        </div>
+                        <div class="action-col">${actionHTML}</div>
+                    </div>`;
+                }).join('');
+            } catch(e) { list.innerHTML='Lỗi tải dữ liệu'; }
         }
 
         async function joinMatch(mid) {
-            if(!confirm("Tham gia?")) return;
-            try { await api('/api/matches/join', 'POST', { match_id: mid, user_id: getUser().id }); showMsg("Thành công!"); loadMatches('open'); }
+            if(!confirm("Bạn muốn tham gia trận này?")) return;
+            try { await api('/api/matches/join', 'POST', { match_id: mid, user_id: getUser().id }); showMsg("Tham gia thành công!"); loadMatches('open'); }
             catch(e) { showMsg(e.message, true); }
         }
 
+        // PROFILE
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
@@ -436,6 +703,7 @@
                 Object.assign(user, body); localStorage.setItem('user', JSON.stringify(user)); showMsg("Cập nhật xong!");
             } catch(e) { showMsg(e.message, true); }
         });
+
         function logout() { localStorage.removeItem('user'); location.reload(); }
     </script>
 </body>
